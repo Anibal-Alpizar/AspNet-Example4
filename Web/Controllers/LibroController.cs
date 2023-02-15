@@ -94,7 +94,6 @@ namespace Web.Controllers
         }
 
         // GET: Libro/Create
-        [HttpPost]
         public ActionResult Create()
         {
             // Que recursos necesito para crear un libro
@@ -123,7 +122,7 @@ namespace Web.Controllers
             {
                 listaCategoriasSelect = categorias.Select(c => c.IdCategoria).ToArray();
             }
-            return new SelectList(lista, "IdCategoria", "Nombre", listaCategoriasSelect);
+            return new SelectList(lista, "IdCategorias", "Nombre", listaCategoriasSelect);
         }
 
 
