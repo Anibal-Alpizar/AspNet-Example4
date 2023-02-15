@@ -98,9 +98,9 @@ namespace Web.Controllers
         public ActionResult Create()
         {
             // Que recursos necesito para crear un libro
-            // autores
+            // lista de autores
             ViewBag.idAutor = listaAutores();
-            // categorias
+            // lista de categorias
             ViewBag.idCategoria = listaCategorias();
 
             return View();

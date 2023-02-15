@@ -211,6 +211,7 @@
     <Content Include="Views\Libro\Index.cshtml" />
     <Content Include="Views\Libro\Details.cshtml" />
     <Content Include="Views\Libro\IndexAdmin.cshtml" />
+    <Content Include="Views\Libro\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
