@@ -127,30 +127,64 @@ namespace Web.Controllers
 
 
         // POST: Libro/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
+        //[HttpPost]
+        //public ActionResult Create(FormCollection collection)
+        //{
+        //    try
+        //    {
+        //        // TODO: Add insert logic here
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
         // GET: Libro/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            ServiceLibro _ServiceLibro = new ServiceLibro();
+            Libro libro = null;
+
+            try
+            {
+                // Si va null
+                if (id == null)
+                {
+                    return RedirectToAction("Index");
+                }
+
+                libro = _ServiceLibro.GetLibroByID(Convert.ToInt32(id));
+                if (libro == null)
+                {
+                    TempData["Message"] = "No existe el libro solicitado";
+                    TempData["Redirect"] = "Libro";
+                    TempData["Redirect-Action"] = "Index";
+                    // Redireccion a la captura del Error
+                    return RedirectToAction("Default", "Error");
+                }
+                return View(libro);
+            }
+            catch (Exception ex)
+            {
+                // Salvar el error en un archivo 
+                Log.Error(ex, MethodBase.GetCurrentMethod());
+                TempData["Message"] = "Error al procesar los datos! " + ex.Message;
+                TempData["Redirect"] = "Libro";
+                TempData["Redirect-Action"] = "IndexAdmin";
+                // Redireccion a la captura del Error
+                return RedirectToAction("Default", "Error");
+            }
+            // listados
+            ViewBag.IdAutor = listaAutores(libro.IdAutor);
+            ViewBag.IdCategoria = listaCategorias(libro.Categoria);
         }
 
         // POST: Libro/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Save(int id, FormCollection collection)
         {
             try
             {
