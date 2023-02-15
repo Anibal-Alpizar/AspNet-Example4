@@ -173,13 +173,22 @@ namespace Infraestructure.Repository
                     if (selectedCategorias != null)
                     {
 
-                        
+                        libro.Categoria = new List<Categoria>();
+                        foreach (var categoria in selectedCategorias)
+                        {
+                            var categoriaToAdd = _RepositoryCategoria.GetCategoriaByID(int.Parse(categoria));
+                            ctx.Categoria.Attach(categoriaToAdd); //sin esto, EF intentará crear una categoría
+                            libro.Categoria.Add(categoriaToAdd);// asociar a la categoría existente con el libro
+
+
+                        }
                     }
                     //Insertar Libro
                     ctx.Libro.Add(libro);
                     //SaveChanges
                     //guarda todos los cambios realizados en el contexto de la base de datos.
                     retorno = ctx.SaveChanges();
+                    //retorna número de filas afectadas
                 }
                 else
                 {
@@ -192,8 +201,17 @@ namespace Infraestructure.Repository
                     retorno = ctx.SaveChanges();
 
                     //Logica para actualizar Categorias
-                  
+                    var selectedCategoriasID = new HashSet<string>(selectedCategorias);
+                    if (selectedCategorias != null)
+                    {
+                        ctx.Entry(libro).Collection(p => p.Categoria).Load();
+                        var newCategoriaForLibro = ctx.Categoria
+                         .Where(x => selectedCategoriasID.Contains(x.IdCategoria.ToString())).ToList();
+                        libro.Categoria = newCategoriaForLibro;
 
+                        ctx.Entry(libro).State = EntityState.Modified;
+                        retorno = ctx.SaveChanges();
+                    }
                 }
             }
 
