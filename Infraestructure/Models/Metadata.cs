@@ -14,35 +14,48 @@ namespace Infraestructure.Models
         public int IdLibro { get; set; }
 
         [Display(Name = "ISBN")]
+        [Required(ErrorMessage = "{0} es un dato requerido")]
         public string Isbn { get; set; }
 
+
+
         [Display(Name = "Id Autor")]
-        
+        [Required(ErrorMessage = "{0} es un dato requerido")]
         public int IdAutor { get; set; }
 
         [Display(Name = "Nombre Libro")]
-        
+        [Required(ErrorMessage = "{0} es un dato requerido")]
         public string Nombre { get; set; }
 
         [Display(Name = "Precio")]
+        [RegularExpression(@"^[0-9]+(\.[0-9]{1,2})?$", ErrorMessage ="solo acepa numeros, con dos decimales")]
+        [Required(ErrorMessage = "{0} es un dato requerido")]
+
         [DisplayFormat(DataFormatString = "{0:C}")]
-
-
         public decimal Precio { get; set; }
 
+
+        [Required(ErrorMessage = "{0} es un dato requerido")]
         [Display(Name = "Cantidad")]
-       
-        
+        [RegularExpression(@"^\d+$", ErrorMessage ="{0} solo acepta numeros")]
         public int Cantidad { get; set; }
 
+
+
         [Display(Name = "Imagen Libro")]
+        [Required(ErrorMessage = "{0} es un dato requerido")]
         public byte[] Imagen { get; set; }
 
+
+
         [Display(Name = "Autor")]
+        [Required(ErrorMessage = "{0} es un dato requerido")]
         public virtual Autor Autor { get; set; }
         public virtual ICollection<OrdenDetalle> OrdenDetalle { get; set; }
 
+
         [Display(Name = "Categoría")]
+        [Required(ErrorMessage = "{0} es un dato requerido")]
         public virtual ICollection<Categoria> Categoria { get; set; }
     }
     internal partial class UsuarioMetadata
