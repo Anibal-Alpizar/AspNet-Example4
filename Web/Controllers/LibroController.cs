@@ -2,6 +2,7 @@
 using Infraestructure.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -184,18 +185,52 @@ namespace Web.Controllers
 
         // POST: Libro/Edit/5
         [HttpPost]
-        public ActionResult Save(int id, FormCollection collection)
+        public ActionResult Save(Libro libro, HttpPostedFileBase ImageFile, string[] selectedCategorias,  FormCollection collection)
         {
+            //Gestion de Archivos 
+            MemoryStream target= new MemoryStream();
+            //Servicio Libro
+            IServiceLibro _ServiceLibro= new ServiceLibro();
             try
             {
-                // TODO: Add update logic here
+                //Insertar la imagen 
+                if(libro.Imagen== null)
+                {
+                    if(ImageFile != null)
+                    {
+                        ImageFile.InputStream.CopyTo(target);
+                        libro.Imagen=target.ToArray();
+                        ModelState.Remove("Imagen");
+                    }
+                }
+                if(ModelState.IsValid)
+                {
+                    Libro oLibroI = _ServiceLibro.Save(libro, selectedCategorias);
+                } else
+                {
+                    //CARGAR LA VISTA CREAR O ACTUALIZAR
+                    ViewBag.IdAutor = listaAutores(libro.IdLibro);
+                    ViewBag.IdCategorias= listaCategorias(libro.Categoria);
+                    //Logica para cargar vista correspondiente
+                    return View("Create", libro);
+                }
+               
 
                 return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                // Salvar el error en un archivo 
+                Log.Error(ex, MethodBase.GetCurrentMethod());
+                TempData["Message"] = "Error al procesar los datos! " + ex.Message;
+                TempData["Redirect"] = "Libro";
+                TempData["Redirect-Action"] = "IndexAdmin";
+                // Redireccion a la captura del Error
+                return RedirectToAction("Default", "Error");
             }
+            // listados
+            ViewBag.IdAutor = listaAutores(libro.IdAutor);
+            ViewBag.IdCategoria = listaCategorias(libro.Categoria);
         }
 
         // GET: Libro/Delete/5
