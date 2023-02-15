@@ -94,10 +94,38 @@ namespace Web.Controllers
         }
 
         // GET: Libro/Create
+        [HttpPost]
         public ActionResult Create()
         {
+            // Que recursos necesito para crear un libro
+            // autores
+            ViewBag.idAutor = listaAutores();
+            // categorias
+            ViewBag.idCategoria = listaCategorias();
+
             return View();
         }
+
+        private SelectList listaAutores(int idAutor = 0)
+        {
+            IServiceAutor _serviceAutor = new ServiceAutor();
+            IEnumerable<Autor> lista = _serviceAutor.GetAutors();
+            return new SelectList(lista, "IdAutor", "Nombre", idAutor);
+        }
+
+        private MultiSelectList listaCategorias(ICollection<Categoria> categorias = null)
+        {
+            IServiceCategoria _serviceCategoria = new ServiceCategoria();
+            IEnumerable<Categoria> lista = _serviceCategoria.GetCategoria();
+            // seleccionar categorias
+            int[] listaCategoriasSelect = null;
+            if (categorias != null)
+            {
+                listaCategoriasSelect = categorias.Select(c => c.IdCategoria).ToArray();
+            }
+            return new SelectList(lista, "IdCategoria", "Nombre", listaCategoriasSelect);
+        }
+
 
         // POST: Libro/Create
         [HttpPost]
