@@ -33,8 +33,6 @@ namespace Infraestructure.Models
 
         [DisplayFormat(DataFormatString = "{0:C}")]
         public decimal Precio { get; set; }
-
-
         [Required(ErrorMessage = "{0} es un dato requerido")]
         [Display(Name = "Cantidad")]
         [RegularExpression(@"^\d+$", ErrorMessage ="{0} solo acepta numeros")]
@@ -96,6 +94,7 @@ namespace Infraestructure.Models
         public string IdCliente { get; set; }
 
         [Display(Name = "Fecha Orden")]
+        [DisplayFormat(DataFormatString ="{0:dd-MM-yyyy}")]
         [DataType(DataType.Date)]
         
         [Required(ErrorMessage = "{0} es un dato requerido")]
